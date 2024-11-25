@@ -28,11 +28,6 @@ Initsystem() {
 
 }
 
-Patch_dc() {
-    #cp -R ../drivers/* ./drivers/
-    patch -p1 <../dc_patch/dc_patch.diff
-    grep -q CONFIG_FLICKER_FREE arch/arm64/configs/vendor/alpha_lao_com-perf_defconfig || echo "CONFIG_FLICKER_FREE=y" >>arch/arm64/configs/vendor/alpha_lao_com-perf_defconfig
-}
 Patch_ksu() {
     #The kernelsu module is no longer supported and will be removed in the future.
     ##
@@ -95,8 +90,6 @@ test -d releases || mkdir releases
 ls -lh
 cd ./android_kernel_lge_sm8150-"${KERNEL_HASH}"/
 
-##dc patch
-Patch_dc
 #Write flag
 test -f localversion || touch localversion
 cat >localversion <<EOF
@@ -115,7 +108,7 @@ make -j"$(nproc --all)" O=out vendor/alpha_lao_com-perf_defconfig \
     CROSS_COMPILE_ARM32=arm-linux-androideabi- \
     CLANG_TRIPLE=aarch64-linux-gnu- \
     LLVM=1 &&
-    Releases "android_kernel_lge_sm8150-dc") || (echo "dc build error" && exit 1)
+    Releases "android_kernel_lge_sm8150") || (echo "build error" && exit 1)
 
 ##kernelsu
 echo "The kernelsu module is no longer supported and will be removed in the future."
@@ -137,4 +130,4 @@ make -j"$(nproc --all)" O=out vendor/alpha_lao_com-perf_defconfig \
     CLANG_TRIPLE=aarch64-linux-gnu- \
     LLVM=1 \
     import_KSU_GIT_VERSION="${KSU_GIT_VERSION}" &&
-    Releases "android_kernel_lge_sm8150-dc-ksu$KERNEL_SU_VERSION") || (echo "ksu build error" && exit 0)
+    Releases "android_kernel_lge_sm8150-ksu$KERNEL_SU_VERSION") || (echo "ksu build error" && exit 0)
