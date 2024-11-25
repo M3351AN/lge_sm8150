@@ -67,7 +67,7 @@ if [ ! -d "./KernelSU-${KERNELSU_HASH}" ]; then
     $UNZIP kernelsu-$KERNELSU_HASH.zip
 fi
 # download kernel 
-if [ ! -d "./android_kernel_oneplus_msm8998-${KERNEL_HASH}" ]; then
+if [ ! -d "./android_kernel_lge_sm8150-${KERNEL_HASH}" ]; then
     echo "kernel is not installed, installing it"
     #download kernel and tar it
     DOWNLOADER $KERNEL_URL kernel-$KERNEL_HASH.zip

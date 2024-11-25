@@ -4,16 +4,16 @@
 ### AnyKernel setup
 # global properties
 properties() { '
-kernel.string=oneplus5/5T lineageOS dc kernel by Seshiria @ GitHub
+kernel.string=LGG8 lineageOS kernel by M3351AN @ GitHub
 do.devicecheck=1
 do.modules=0
 do.systemless=1
 do.cleanup=1
 do.cleanuponabort=0
-device.name1=cheeseburger
-device.name2=dumpling
-device.name3=OnePlus5
-device.name4=OnePlus5T
+device.name1=alphalm
+device.name2=alphaplus
+device.name3=LM-G820
+device.name4=LM-G820N
 supported.versions=14
 supported.patchlevels=
 supported.vendorpatchlevels=

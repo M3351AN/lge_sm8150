@@ -53,7 +53,7 @@ KERNELSU_HASH=$KERNELSU_HASH
 KERNELSU_URL=https://github.com/tiann/KernelSU/archive/"\${KERNELSU_HASH}".zip
 #lineageos kernel
 KERNEL_HASH=$KERNEL_HASH
-KERNEL_URL=https://github.com/LineageOS/android_kernel_oneplus_msm8998/archive/"\${KERNEL_HASH}".zip
+KERNEL_URL=https://github.com/LineageOS/android_kernel_lge_sm8150/archive/"\${KERNEL_HASH}".zip
 EOF
 }
 

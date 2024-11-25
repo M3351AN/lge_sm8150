@@ -31,7 +31,7 @@ Initsystem() {
 Patch_dc() {
     #cp -R ../drivers/* ./drivers/
     patch -p1 <../dc_patch/dc_patch.diff
-    grep -q CONFIG_FLICKER_FREE arch/arm64/configs/lineage_oneplus5_defconfig || echo "CONFIG_FLICKER_FREE=y" >>arch/arm64/configs/lineage_oneplus5_defconfig
+    grep -q CONFIG_FLICKER_FREE arch/arm64/configs/vendor/alpha_lao_com-perf_defconfig || echo "CONFIG_FLICKER_FREE=y" >>arch/arm64/configs/vendor/alpha_lao_com-perf_defconfig
 }
 Patch_ksu() {
     #The kernelsu module is no longer supported and will be removed in the future.
@@ -51,10 +51,10 @@ Patch_ksu() {
     DRIVER_MAKEFILE=$DRIVER_DIR/Makefile
     grep -q "kernelsu" "$DRIVER_MAKEFILE" || printf "\nobj-y += kernelsu/\n" >>"$DRIVER_MAKEFILE"
     #额外的修补
-    grep -q CONFIG_KSU arch/arm64/configs/lineage_oneplus5_defconfig || \
-        echo "CONFIG_KSU=y" >>arch/arm64/configs/lineage_oneplus5_defconfig
-    grep -q CONFIG_OVERLAY_FS arch/arm64/configs/lineage_oneplus5_defconfig || \
-        echo "CONFIG_OVERLAY_FS=y" >>arch/arm64/configs/lineage_oneplus5_defconfig
+    grep -q CONFIG_KSU arch/arm64/configs/vendor/alpha_lao_com-perf_defconfig || \
+        echo "CONFIG_KSU=y" >>arch/arm64/configs/vendor/alpha_lao_com-perf_defconfig
+    grep -q CONFIG_OVERLAY_FS arch/arm64/configs/vendor/alpha_lao_com-perf_defconfig || \
+        echo "CONFIG_OVERLAY_FS=y" >>arch/arm64/configs/vendor/alpha_lao_com-perf_defconfig
     #修补kernelsu/makefile
     ## https://gist.github.com/0penBrain/7be59a48aba778c955d992aa69e524c5
     KSU_GIT_VERSION=$(curl -I -k "https://api.github.com/repos/tiann/KernelSU/commits?per_page=1&sha=$KERNELSU_HASH" | \
@@ -78,7 +78,7 @@ Releases() {
     #用生成的文件的MD5来区分每次生成的文件
     md5=$(md5sum ../AnyKernel3-${ANYKERNEL_HASH}/Image.gz-dtb)
     md5tab=${md5:0:5}
-    kernelversion=$(head -n 3 "${GITHUB_WORKSPACE}"/android_kernel_oneplus_msm8998-"${KERNEL_HASH}"/Makefile | awk '{print $3}' | tr -d '\n')
+    kernelversion=$(head -n 3 "${GITHUB_WORKSPACE}"/android_kernel_lge_sm8150-"${KERNEL_HASH}"/Makefile | awk '{print $3}' | tr -d '\n')
     buildtime=$(date +%Y%m%d-%H%M%S)
     touch "${GITHUB_WORKSPACE}"/AnyKernel3-${ANYKERNEL_HASH}/buildinfo
     cat >"${GITHUB_WORKSPACE}"/AnyKernel3-${ANYKERNEL_HASH}/buildinfo <<EOF
@@ -93,7 +93,7 @@ cp "${GITHUB_WORKSPACE}"/anykernel.sh "${GITHUB_WORKSPACE}"/AnyKernel3-${ANYKERN
 Initsystem
 test -d releases || mkdir releases
 ls -lh
-cd ./android_kernel_oneplus_msm8998-"${KERNEL_HASH}"/
+cd ./android_kernel_lge_sm8150-"${KERNEL_HASH}"/
 
 ##dc patch
 Patch_dc
@@ -103,7 +103,7 @@ cat >localversion <<EOF
 -0
 EOF
 #llvm dc build
-make -j"$(nproc --all)" O=out lineage_oneplus5_defconfig \
+make -j"$(nproc --all)" O=out vendor/alpha_lao_com-perf_defconfig \
     ARCH=arm64 \
     SUBARCH=arm64 \
     LLVM=1
@@ -115,7 +115,7 @@ make -j"$(nproc --all)" O=out lineage_oneplus5_defconfig \
     CROSS_COMPILE_ARM32=arm-linux-androideabi- \
     CLANG_TRIPLE=aarch64-linux-gnu- \
     LLVM=1 &&
-    Releases "op5lin21-dc") || (echo "dc build error" && exit 1)
+    Releases "android_kernel_lge_sm8150-dc") || (echo "dc build error" && exit 1)
 
 ##kernelsu
 echo "The kernelsu module is no longer supported and will be removed in the future."
@@ -124,7 +124,7 @@ test -f localversion || touch localversion
 cat >localversion <<EOF
 -1
 EOF
-make -j"$(nproc --all)" O=out lineage_oneplus5_defconfig \
+make -j"$(nproc --all)" O=out vendor/alpha_lao_com-perf_defconfig \
     ARCH=arm64 \
     SUBARCH=arm64 \
     LLVM=1
@@ -137,4 +137,4 @@ make -j"$(nproc --all)" O=out lineage_oneplus5_defconfig \
     CLANG_TRIPLE=aarch64-linux-gnu- \
     LLVM=1 \
     import_KSU_GIT_VERSION="${KSU_GIT_VERSION}" &&
-    Releases "Deprecated-op5lin21-dc-ksu$KERNEL_SU_VERSION") || (echo "ksu build error" && exit 0)
+    Releases "android_kernel_lge_sm8150-dc-ksu$KERNEL_SU_VERSION") || (echo "ksu build error" && exit 0)
